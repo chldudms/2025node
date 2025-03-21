@@ -26,14 +26,15 @@ const app = express();
 // app.get('/', (req, res) => {
 //     res.send('bye, world!\n');
 // });
-
+ 
+app.use(express.json());
 
 app.get('/swag', (req, res) => {
     res.send('get, swag!\n');
 });
 
 app.post('/swag', (req, res) => {
-    res.send('post swag!\n');
+    res.send(req.body);
 }); 
 
 // 서버가 포트 3000에서 요청을 대기합니다.
