@@ -16,7 +16,10 @@
   },
   "homepage": "https://github.com/chldudms/2025node#readme",
   "dependencies": {
-    "express": "^4.21.2"
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "mysql2": "^3.14.0"
   },
   "description": ""
 }
