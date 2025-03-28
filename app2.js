@@ -1,43 +1,52 @@
-const express = require("express");
-const path = require("path");  // path 모듈 추가
-const mysql = require('mysql2');
-const { createConnection } = require("net");
-const dotenv = require('dotenv');
+require('dotenv').config(); // 환경 변수 로드
 
-dotenv.config();
+const express = require("express");
+const path = require("path");
+const mysql = require('mysql2');
+
 const app = express();
 
-const db = mysql.createConnection({
+// 🚀 `createPool` 사용해서 MySQL 연결 유지
+const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
-    password:process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-})
-
-travelList = ['뉴욕', '파리','서울','도쿄'];
-
-app.set('view engine','ejs');
-//dirname:현재 파일이 속한 절대 경로
-//path.join을 사용하면 운영체제와 상관없이 경로 구분자(/,\)을 알아서 잡아준다. 
-
-app.set('views', path.join(__dirname,'views'));
-
-db.connect(err=> {
-    if(err){
-        console.error('MySQL 연결 실패',err)
-    }
-    console.log('mysql에 연결되었습니다.  ')
-})
-
-app.get('/',(req,res)=>{
-    res.render('home');
-})
-
-app.get('/travel',(req,res)=>{
-    res.render('travel',{travelList});
-})
-
-app.listen(3000, () => {
-    console.log('서버가 http://localhost:3000 에서 실행 중입니다.');
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
 });
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// ✅ MySQL 연결 확인
+db.getConnection((err, connection) => {
+    if (err) {
+        console.error('❌ MySQL 연결 실패:', err);
+        process.exit(1);  // 서버 종료
+    }
+    console.log('✅ MySQL에 연결되었습니다.');
+    connection.release();  // 연결 반환
+});
+
+// 🚀 홈 페이지
+app.get('/', (req, res) => {
+    res.render('home');
+});
+
+// 🚀 여행 리스트 조회 API
+app.get('/travel', (req, res) => {
+    const query = 'SELECT id, name FROM travellist';
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('❌ 데이터베이스 쿼리 실패:', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        res.render('travel', { travelList: results });
+    });
+});
+
+// ✅ 서버 실행
+app.listen(3000, () => {
+    console.log('🚀 서버가 http://localhost:3000 에서 실행 중입니다.');
+});
