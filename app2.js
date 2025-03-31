@@ -46,7 +46,21 @@ app.get('/travel', (req, res) => {
     });
 });
 
+app.get('/travel/:id',(req,res)=>{
+    const travelID= req.params.id;
+    const query = 'SELECT * FROM travellist WHERE id =?'
+    db.query(query, [travelID],(err, results)=>{
+        if(err){
+            console.error('DB 쿼리 실패',err)
+            res.status(500).send('내부 서버 에러');
+            return;
+        }
+        if(results.legnth===0){
+            res.status(400).send('여행지를 찾을 수 없습니당.')
+        }
+        const travel = results[0];
+        res.render('travelDetail',{travel});
+    })
+})
+
 // ✅ 서버 실행
-app.listen(3000, () => {
-    console.log('🚀 서버가 http://localhost:3000 에서 실행 중입니다.');
-});

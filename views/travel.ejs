@@ -10,9 +10,9 @@
 <body>
     <h1>여행지 목록</h1>
     <ul>
-        <% travelList.forEach(travel=> {  %>
-            <li><%= travel.name %></li> 
-       <%  }) %>
+        <% travelList.forEach(travel => {  %>
+            <a href="/travel/<%= travel.id %>"><%= travel.name %></a>
+         <%  }) %>         
         <!-- <li>뉴욕</li>
         <li>파리</li>
         <li>서울</li>
