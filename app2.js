@@ -17,7 +17,6 @@ const db = mysql.createPool({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// ✅ MySQL 연결 확인
 db.getConnection((err, connection) => {
     if (err) {
         console.error('❌ MySQL 연결 실패:', err);
@@ -27,12 +26,10 @@ db.getConnection((err, connection) => {
     connection.release();  // 연결 반환
 });
 
-// 🚀 홈 페이지
 app.get('/', (req, res) => {
     res.render('home');
 });
 
-// 🚀 여행 리스트 조회 API
 app.get('/travel', (req, res) => {
     const query = 'SELECT id, name FROM travellist';
 
@@ -63,4 +60,11 @@ app.get('/travel/:id',(req,res)=>{
     })
 })
 
+//use: 모든 메소드에 대해, 경로가 없으면 ? 모든 경로에 대해
+app.use((req,res)=>{
+    res.status(404).send("사공사 낫파운드")
+})
 // ✅ 서버 실행
+app.listen(3000, () => {
+    console.log('🚀 서버가 http://localhost:3000 에서 실행 중입니다.');
+});
