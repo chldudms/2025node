@@ -14,6 +14,9 @@ const db = mysql.createPool({
     database: process.env.DB_NAME,
 });
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -43,25 +46,64 @@ app.get('/travel', (req, res) => {
     });
 });
 
-app.get('/travel/:id',(req,res)=>{
-    const travelID= req.params.id;
+app.get('/travel/:id', (req, res) => {
+    const travelID = req.params.id;
     const query = 'SELECT * FROM travellist WHERE id =?'
-    db.query(query, [travelID],(err, results)=>{
-        if(err){
-            console.error('DB 쿼리 실패',err)
+    db.query(query, [travelID], (err, results) => {
+        if (err) {
+            console.error('DB 쿼리 실패', err)
             res.status(500).send('내부 서버 에러');
             return;
         }
-        if(results.legnth===0){
+        if (results.legnth === 0) {
             res.status(400).send('여행지를 찾을 수 없습니당.')
         }
         const travel = results[0];
-        res.render('travelDetail',{travel});
+        res.render('travelDetail', { travel });
     })
 })
 
+
+app.post('/travel', (req, res) => {
+    const { name } = req.body;
+    const _query = 'INSERT INTO travellist (name) VALUES (?)';
+
+    db.query(_query, [name], (err, results) => {
+        if (err) {
+            console.error('❌ 데이터베이스 쿼리 실패:', err);
+            res.status(500).send('Internal Server Error');
+            return;
+        }
+        res.redirect('/travel'); a
+    });
+});
+
+app.get('/add-travel', (req, res) => {
+    res.render('addTravel');
+})
+
+
+app.put('/travel/:id', (req, res) => {
+    const travelID = req.params.id;
+    const {name} = req.body;
+    const _query = 'UPDATE travellist SET name = ? WHERE id = ?'
+    db.query(_query, [name ,travelID], (err, results) => {
+        if (err) {
+            console.error('DB 쿼리 실패', err)
+            res.status(500).send('내부 서버 에러');
+            return;
+        }
+        if (results.length === 0) {
+            res.status(400).send('여행지를 찾을 수 없습니당.')
+        }
+        const travel = results[0];
+        res.render('updateSuccess', { travel });
+    })
+});
+
+
 //use: 모든 메소드에 대해, 경로가 없으면 ? 모든 경로에 대해
-app.use((req,res)=>{
+app.use((req, res) => {
     res.status(404).send("사공사 낫파운드")
 })
 // ✅ 서버 실행

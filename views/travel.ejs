@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset='utf-8'>
-   
+
     <title>여행가자</title>
-  
+
     <script src='main.js'></script>
 </head>
+
 <body>
     <h1>여행지 목록</h1>
     <ul>
-        <% travelList.forEach(travel => {  %>
-            <a href="/travel/<%= travel.id %>"><%= travel.name %></a>
-         <%  }) %>         
-        <!-- <li>뉴욕</li>
+        <% travelList.forEach(travel=> { %>
+            <a href="/travel/<%= travel.id %>">
+                <%= travel.name %>
+            </a>
+            <% }) %>
+                <!-- <li>뉴욕</li>
         <li>파리</li>
         <li>서울</li>
         <li>도쿄</li> -->
     </ul>
+    <a href="/add-travel">여행지 추가</a>
 </body>
+
 </html>
