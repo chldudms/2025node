@@ -5,17 +5,18 @@
     <meta charset='utf-8'>
 
     <title>여행가자</title>
-
-    <script src='main.js'></script>
 </head>
 
 <body>
     <h1>여행지 목록</h1>
     <ul>
         <% travelList.forEach(travel=> { %>
-            <a href="/travel/<%= travel.id %>">
-                <%= travel.name %>
-            </a>
+            <a href="/travel/<%= travel.id %>">  <%= travel.name %>  </a> 
+            <a href="/travel/<%= travel.id %>/edit"> 수정  </a> |
+            <form action="/travel/<%= travel.id%>?_method=DELETE"
+                method="POST" style="display:inline" > 
+             <button type="submit">삭제</button>
+            </form>
             <% }) %>
                 <!-- <li>뉴욕</li>
         <li>파리</li>
