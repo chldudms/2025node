@@ -3,6 +3,9 @@ require('dotenv').config(); // 환경 변수 로드
 const express = require("express");
 const path = require("path");
 const mysql = require('mysql2');
+const dotenv = require("dotenv")
+
+const port = 3001;
 
 const app = express();
 
@@ -74,7 +77,7 @@ app.post('/travel', (req, res) => {
             res.status(500).send('Internal Server Error');
             return;
         }
-        res.redirect('/travel'); a
+        res.redirect('/travel'); 
     });
 });
 
@@ -97,7 +100,7 @@ app.put('/travel/:id', (req, res) => {
             res.status(400).send('여행지를 찾을 수 없습니당.')
         }
         const travel = results[0];
-        res.render('updateSuccess', { travel });
+        res.render('updateSuccess');
     })
 });
 
@@ -107,6 +110,7 @@ app.use((req, res) => {
     res.status(404).send("사공사 낫파운드")
 })
 // ✅ 서버 실행
-app.listen(3000, () => {
-    console.log('🚀 서버가 http://localhost:3000 에서 실행 중입니다.');
+app.listen(port, () => {
+    console.log(`🚀 서버가 http://localhost:${port} 에서 실행 중입니다.`);
 });
+    ``
